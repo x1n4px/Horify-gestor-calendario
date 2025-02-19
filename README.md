@@ -4,18 +4,18 @@ Este es el proyecto para la creación y mantenimiento de horarios mensuales de l
 
 ## Hitos del Proyecto
 
-### 1. Configuración del Proyecto
-#### 1.1. Inicialización del proyecto en el repositorio
+### 1. Configuración del Proyecto 
+#### 1.1. Inicialización del proyecto en el repositorio ✔️
 - Crear un repositorio en GitHub para el proyecto.
 - Configuración inicial de los entornos de desarrollo (Instalar dependencias básicas).
 - Crear estructura de carpetas para el front-end y back-end.
 
-#### 1.2. Configuración del servidor (Back-End)
+#### 1.2. Configuración del servidor (Back-End) ✔️
 - Configuración inicial de **Node.js** con **Express**.
 - Conexión con la base de datos **MariaDB**.
 - Creación de archivo `.env` para la configuración de credenciales.
 
-#### 1.3. Configuración del Front-End
+#### 1.3. Configuración del Front-End 
 - Inicializar el proyecto en **Angular**.
 - Instalación y configuración de **Tailwind CSS** para la parte visual.
 - Configuración de rutas y estructura básica de componentes.
