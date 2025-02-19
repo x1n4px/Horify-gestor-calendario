@@ -1,5 +1,8 @@
 # Gestor de Horarios - Horify
 
+![image](https://github.com/user-attachments/assets/07c0cc04-e937-4913-a281-6f0839c449ec)
+
+
 Este es el proyecto para la creación y mantenimiento de horarios mensuales de los trabajadores de la empresa **SStech**. El sistema estará compuesto por un **front-end** y un **back-end**, los cuales interactúan para gestionar la asignación y visualización de los horarios laborales.
 
 ## Hitos del Proyecto
