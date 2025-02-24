@@ -1,0 +1,62 @@
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE datos_privados (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT UNIQUE NOT NULL,
+    nombre VARCHAR(100),
+    apellido VARCHAR(100),
+    telefono VARCHAR(20),
+    direccion TEXT,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+CREATE TABLE tiendas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    direccion TEXT,
+    telefono VARCHAR(20),
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE empleados (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    tienda_id INT NOT NULL,
+    rol VARCHAR(50) NOT NULL, -- ej: "Gerente", "Cajero", etc.
+    fecha_ingreso DATE,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (tienda_id) REFERENCES tiendas(id) ON DELETE CASCADE
+);
+
+CREATE TABLE contratos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tipo_contrato VARCHAR(100),   -- Tipo de contrato (ej. indefinido, temporal)
+    horas_semanales INT,          -- Número de horas semanales
+    fecha_inicio DATE,            -- Fecha de inicio del contrato
+    fecha_fin DATE                -- Fecha de fin del contrato (si aplica)
+);
+
+ALTER TABLE empleados
+ADD COLUMN contrato_id INT,   -- Relación con la tabla contratos
+ADD FOREIGN KEY (contrato_id) REFERENCES contratos(id);  -- Relación con la tabla contratos
+
+-- Opcionalmente puedes eliminar las columnas que ya no se van a utilizar, como las horas_semanales.
+-- ALTER TABLE empleados DROP COLUMN horas_semanales;
+
+
+CREATE TABLE horas_trabajadas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    empleado_id INT,          -- Relación con la tabla empleados
+    tienda_id INT,            -- Relación con la tabla tiendas
+    hora_entrada TIME,        -- Hora de entrada
+    hora_salida TIME,         -- Hora de salida
+    horas INT,                -- Número de horas trabajadas en ese día (puedes mantenerlo o eliminarlo si calculas con hora_entrada y hora_salida)
+    fecha DATE,               -- Fecha en la que se trabajaron las horas
+    FOREIGN KEY (empleado_id) REFERENCES empleados(id),  -- Relación con empleados
+    FOREIGN KEY (tienda_id) REFERENCES tiendas(id)       -- Relación con tiendas
+);

@@ -1,0 +1,32 @@
+<div class="p-4">
+    <!-- Selección de mes -->
+    <div class="mb-4">
+      <label for="mes" class="block text-lg font-semibold mb-2">Seleccionar mes:</label>
+      <select id="mes" class="p-2 border rounded w-full" [(ngModel)]="mesSeleccionado" (change)="generarMatriz()">
+        <option *ngFor="let mes of meses" [value]="mes.value">{{ mes.label }}</option>
+      </select>
+    </div>
+  
+    <!-- Matriz de horarios -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full border border-gray-300">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="border px-4 py-2">Día</th>
+            <th *ngFor="let hora of horas" class="border px-2 py-2">{{ hora }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let dia of matriz">
+            <td class="border px-4 py-2 font-semibold">{{ dia.diaCompleto }}</td>
+            <td *ngFor="let slot of dia.slots" 
+                class="border px-2 py-2"
+                [ngClass]="{'bg-green-500': slot === 'Trabajando', 'bg-gray-100': slot !== 'Trabajando'}">
+              {{ slot === '' ? '' : '' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  

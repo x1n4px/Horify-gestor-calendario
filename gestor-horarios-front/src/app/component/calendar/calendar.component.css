@@ -1,0 +1,9 @@
+/* Calendar.component.css */
+.bg-green-500 {
+    background-color: #38a169; /* Verde para el trabajo */
+  }
+  
+  .bg-gray-100 {
+    background-color: #f7fafc; /* Gris claro para las celdas vacías */
+  }
+  
