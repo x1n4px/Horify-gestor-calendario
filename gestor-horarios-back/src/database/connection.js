@@ -10,22 +10,6 @@ const pool = mysql.createPool({
     waitForConnections: true,
     connectionLimit: 10,  // Número máximo de conexiones simultáneas
     queueLimit: 0
-});
+}).promise(); // Habilitar promesas en el pool
 
-// Usar Promise para hacer consultas asíncronas
-const db = () => {
-    return new Promise((resolve, reject) => {
-        pool.getConnection((err, connection) => {
-            if (err) {
-                console.log('Error en la conexión a la base de datos:', err);
-                reject(err);
-            } else {
-                console.log('Conexión exitosa a la base de datos');
-                resolve(connection);
-                connection.release(); // Liberar la conexión una vez que no se necesite
-            }
-        });
-    });
-};
-
-module.exports = { db };
+module.exports = pool; // Exportamos directamente el pool con soporte para async/await

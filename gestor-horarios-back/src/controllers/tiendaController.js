@@ -1,54 +1,47 @@
 const Tienda = require('../models/tiendaModel');
 const Empleado = require('../models/empleadoModel');
-const { db } = require('../database/connection');
-
+const { pool } = require('../database/connection'); // Importamos el pool correctamente
 
 const obtenerTiendas = async (req, res) => {
     try {
-        const connection = await db(); // Obtienes una conexión del pool
-        const [tiendas] = await connection.promise().query('SELECT * FROM tiendas'); // Ejecuta una consulta
-        console.log(tiendas); // Muestra los resultados
+        const [tiendas] = await pool.promise().query('SELECT * FROM tiendas');
+        console.log(tiendas);
 
         return res.json({
             ok: true,
             tiendas
         });
-
     } catch (error) {
-        console.log('Error al obtener tiendas:', error);
+        console.error('Error al obtener tiendas:', error);
+        return res.status(500).json({
+            ok: false,
+            message: 'Error al obtener tiendas'
+        });
     }
 };
 
-
-// Función para obtener una tienda por su ID
-const obtenerTiendaPorId = async (req,res) => {
+const obtenerTiendaPorId = async (req, res) => {
     try {
         const id = req.params.id;
-        // Obtener una conexión del pool
-        const connection = await db();
+        const [tienda] = await pool.promise().query('SELECT * FROM tiendas WHERE id = ?', [id]);
 
-        // Ejecutar la consulta para obtener la tienda con el ID dado
-        const [tienda] = await connection.promise().query('SELECT * FROM tiendas WHERE id = ?', [id]);
-
-        if(tienda.length != 0) {
-            const [empleados] = await connection.promise().query('SELECT * FROM empleados where tienda_id = ?', [id]);
+        if (tienda.length !== 0) {
+            const [empleados] = await pool.promise().query('SELECT * FROM empleados WHERE tienda_id = ?', [id]);
             tienda[0].empleados = empleados;
         }
 
-        // Retornar la tienda encontrada
         return res.json({
             ok: true,
-            tienda: tienda[0]
+            tienda: tienda.length ? tienda[0] : null
         });
     } catch (error) {
         console.error('Error al obtener la tienda:', error);
-        throw error;
+        return res.status(500).json({
+            ok: false,
+            message: 'Error al obtener la tienda'
+        });
     }
 };
-
-
-
-
 
 module.exports = {
     obtenerTiendas,

@@ -8,6 +8,7 @@ const horasTrabajadasRoutes = require('./routes/horasTrabajadasRoute')
 
 // Cargar las variables de entorno
 dotenv.config();
+app.use(express.json()); // Middleware para procesar JSON
 app.use(cors());
 // Usar las rutas de tienda
 app.use('/api', tiendaRoutes);

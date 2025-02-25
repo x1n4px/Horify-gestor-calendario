@@ -5,5 +5,6 @@ export interface HoursWorked {
     fecha: string;
     hora_entrada: string;
     hora_salida: string;
+    horas: number;
   }
   
