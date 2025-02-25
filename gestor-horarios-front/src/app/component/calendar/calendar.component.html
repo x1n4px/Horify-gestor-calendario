@@ -1,32 +1,48 @@
-<div class="p-4">
-    <!-- Selección de mes -->
-    <div class="mb-4">
-      <label for="mes" class="block text-lg font-semibold mb-2">Seleccionar mes:</label>
-      <select id="mes" class="p-2 border rounded w-full" [(ngModel)]="mesSeleccionado" (change)="generarMatriz()">
-        <option *ngFor="let mes of meses" [value]="mes.value">{{ mes.label }}</option>
-      </select>
-    </div>
-  
-    <!-- Matriz de horarios -->
-    <div class="overflow-x-auto">
-      <table class="min-w-full border border-gray-300">
-        <thead>
-          <tr class="bg-gray-200">
-            <th class="border px-4 py-2">Día</th>
-            <th *ngFor="let hora of horas" class="border px-2 py-2">{{ hora }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let dia of matriz">
-            <td class="border px-4 py-2 font-semibold">{{ dia.diaCompleto }}</td>
-            <td *ngFor="let slot of dia.slots" 
-                class="border px-2 py-2"
-                [ngClass]="{'bg-green-500': slot === 'Trabajando', 'bg-gray-100': slot !== 'Trabajando'}">
-              {{ slot === '' ? '' : '' }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+<div class="p-6">
+<!-- Datos de la tienda -->
+<div class="mb-4 flex items-center">
+  <label for="tienda" class="text-lg font-semibold text-gray-700" style="flex-basis: 30%;">Datos de la tienda:</label>
+  <input type="text" id="tienda" [(ngModel)]="tiendaSeleccionada" placeholder="Nombre de la tienda" 
+    class="p-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400" style="flex-grow: 1;">
+</div>
+
+<!-- Datos del empleado -->
+<div class="mb-4 flex items-center">
+  <label for="empleado" class="text-lg font-semibold text-gray-700" style="flex-basis: 30%;">Datos del empleado:</label>
+  <input type="text" id="empleado" [(ngModel)]="empleadoSeleccionado" placeholder="Nombre del empleado"
+    class="p-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400" style="flex-grow: 1;">
+</div>
+
+
+
+  <!-- Selección de mes -->
+  <div class="mb-4">
+    <label for="mes" class="block text-lg font-semibold mb-2 text-gray-700">Seleccionar mes:</label>
+    <select id="mes" class="p-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400" [(ngModel)]="mesSeleccionado" (change)="generarMatriz()">
+      <option *ngFor="let mes of meses" [value]="mes.value">{{ mes.label }}</option>
+    </select>
   </div>
-  
+
+  <!-- Matriz de horarios -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full border border-gray-300 shadow-md rounded-lg">
+      <thead>
+        <tr class="bg-gray-200 text-gray-700">
+          <th class="border px-4 py-2 text-left">Día</th>
+          <th *ngFor="let hora of horas" class="border px-2 py-2 text-left">{{ hora }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let dia of matriz; let diaIndex = index" class="hover:bg-gray-100">
+          <td class="border px-4 py-2 font-semibold text-gray-800">{{ dia.diaCompleto }}</td>
+          <td *ngFor="let slot of dia.slots; let slotIndex = index" 
+            (click)="seleccionarCelda(diaIndex, slotIndex, dia, slot)"
+              class="border px-2 py-2 text-center"
+              [ngClass]="{'bg-green-500 text-white font-semibold': slot === 'Trabajando', 'bg-gray-100': slot !== 'Trabajando'}">
+            {{ slot === '' ? '' : '' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

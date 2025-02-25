@@ -18,7 +18,7 @@ const obtenerHorasTrabajadasPorId = async (req,res) => {
         // Retornar la tienda encontrada
         return res.json({
             ok: true,
-            rows: empleado[0],
+            rows: empleado,
             contrato: contrato[0]
         });
     } catch (error) {

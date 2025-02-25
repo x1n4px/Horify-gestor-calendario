@@ -11,7 +11,7 @@ const obtenerEmpleadoPorId = async (req,res) => {
         const connection = await db();
 
         // Ejecutar la consulta para obtener la tienda con el ID dado
-        const [empleado] = await connection.promise().query('SELECT * FROM empleados WHERE id = ?', [id]);
+        const [empleado] = await connection.promise().query('select u.*, e.*, t.id, t.nombre as tienda_nombre from empleados e join usuarios u on u.id = e.usuario_id join tiendas t on t.id = e.tienda_id where e.id  = ?', [id]);
 
         
 
