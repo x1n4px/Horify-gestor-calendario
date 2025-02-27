@@ -1,29 +1,29 @@
 const mongoose = require('mongoose');
 
-const TiendaSchema = mongoose.Schema({
-    nombre: {
+const StoreSchema = mongoose.Schema({
+    name: {
         type: String,
         required: true
     },
-    direccion: {
+    address: {
         type: String
     },
-    telefono: {
+    phone: {
         type: String
     },
-    fecha_creacion: {
+    creation_date: {
         type: Date
     },
-    empleados: [{
+    employee: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Empleado'
+        ref: 'Employee'
     }]
 
-}, { collection: 'tiendas' });
+}, { collection: 'stores' });
 
-TiendaSchema.method('toJSON', function () {
+StoreSchema.method('toJSON', function () {
     const { __v, ...object } = this.toObject();
     return object;
 })
 
-module.exports = mongoose.model('Tienda', TiendaSchema);
+module.exports = mongoose.model('Store', StoreSchema);

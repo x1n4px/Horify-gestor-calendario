@@ -1,15 +1,12 @@
-const Tienda = require('../models/tiendaModel');
-const Empleado = require('../models/empleadoModel');
 const { pool } = require('../database/connection'); // Importamos el pool correctamente
 
-const obtenerTiendas = async (req, res) => {
+const getStores = async (req, res) => {
     try {
-        const [tiendas] = await pool.promise().query('SELECT * FROM tiendas');
-        console.log(tiendas);
+        const [stores] = await pool.promise().query('SELECT * FROM store');
 
         return res.json({
             ok: true,
-            tiendas
+            stores
         });
     } catch (error) {
         console.error('Error al obtener tiendas:', error);
@@ -20,19 +17,19 @@ const obtenerTiendas = async (req, res) => {
     }
 };
 
-const obtenerTiendaPorId = async (req, res) => {
+const getStoresById = async (req, res) => {
     try {
         const id = req.params.id;
-        const [tienda] = await pool.promise().query('SELECT * FROM tiendas WHERE id = ?', [id]);
+        const [store] = await pool.promise().query('SELECT * FROM store WHERE id = ?', [id]);
 
-        if (tienda.length !== 0) {
-            const [empleados] = await pool.promise().query('SELECT * FROM empleados WHERE tienda_id = ?', [id]);
-            tienda[0].empleados = empleados;
+        if (store.length !== 0) {
+            const [employees] = await pool.promise().query('SELECT * FROM employee WHERE store_id = ?', [id]);
+            store[0].employee = employees;
         }
 
         return res.json({
             ok: true,
-            tienda: tienda.length ? tienda[0] : null
+            store: store.length ? store[0] : null
         });
     } catch (error) {
         console.error('Error al obtener la tienda:', error);
@@ -44,6 +41,6 @@ const obtenerTiendaPorId = async (req, res) => {
 };
 
 module.exports = {
-    obtenerTiendas,
-    obtenerTiendaPorId
+    getStores,
+    getStoresById
 };

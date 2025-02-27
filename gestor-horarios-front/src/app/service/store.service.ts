@@ -4,11 +4,11 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class ShopService {
+export class StoreService {
 
   constructor(public http: HttpClient) { }
 
-  getShop(id: number) {
-    return this.http.get(`http://localhost:3001/api/shop/${id}`);
+  getStore(id: number) {
+    return this.http.get(`http://localhost:3001/api/store/${id}`);
   }
 }

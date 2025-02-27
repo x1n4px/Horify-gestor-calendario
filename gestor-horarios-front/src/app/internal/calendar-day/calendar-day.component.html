@@ -1,0 +1,121 @@
+<div class="p-6">
+    <!-- Datos de la tienda -->
+    <div class="mb-4 flex items-center">
+      <label
+        for="tienda"
+        class="text-lg font-semibold text-gray-700"
+        style="flex-basis: 30%"
+        >Datos de la tienda:</label
+      >
+      <input
+        type="text"
+        id="tienda"
+        [(ngModel)]="tiendaSeleccionada"
+        placeholder="Nombre de la tienda"
+        class="p-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+        style="flex-grow: 1"
+      />
+    </div>
+  
+    <!-- Datos del empleado -->
+    <div class="mb-4 flex items-center">
+      <label
+        for="empleado"
+        class="text-lg font-semibold text-gray-700"
+        style="flex-basis: 30%"
+        >Datos del empleado:</label
+      >
+      <select
+        id="empleado"
+        [(ngModel)]="empleadoSeleccionado"
+        class="p-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+        style="flex-grow: 1"
+        (ngModelChange)="onEmpleadoSeleccionado()"
+      >
+        <option [ngValue]="undefined" selected>Selecciona un empleado</option>
+        <!-- Opción predeterminada -->
+        <option *ngFor="let worker of employee" [ngValue]="worker">
+          {{ worker.name }} {{ worker.surname }}
+        </option>
+      </select>
+    </div>
+  
+    <!-- Selección de mes -->
+    <div class="mb-4 flex items-center">
+      <label
+        for="mes"
+        class="block text-lg font-semibold mb-2 text-gray-700"
+        style="flex-basis: 30%"
+        >Seleccionar mes:</label
+      >
+      <select
+        id="mes"
+        class="p-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+        [(ngModel)]="selectedMonth"
+        (change)="generarMatriz()"
+        style="flex-grow: 1"
+      >
+        <option *ngFor="let mes of meses" [value]="mes.value">
+          {{ mes.label }}
+        </option>
+      </select>
+    </div>
+  
+    <div class="flex items-center space-x-6 mb-4">
+       <!-- Botón -->
+       <button
+       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+       (click)="saveChanges()"
+     >
+       Salvar cambios
+     </button>
+      <!-- Apartado de información -->
+      <div class="flex space-x-6">
+        <div class="text-gray-700 font-semibold">Contrato (Horas semanales):</div>
+        <div class="text-lg font-medium text-gray-900">{{contract?.weekly_hours}} horas</div>
+    
+        <div class="text-gray-700 font-semibold">Horas anuales consumidas:</div>
+        <div class="text-lg font-medium text-gray-900">{{anualHours}} / {{contract?.anual_hours }} horas</div>
+      </div>
+    
+     
+    </div>
+    
+    
+  
+    <!-- Matriz de horarios -->
+    <div class="overflow-x-auto" *ngIf="empleadoSeleccionado !== undefined">
+      <table class="min-w-full border border-gray-300 shadow-md rounded-lg">
+        <thead>
+          <tr class="bg-gray-200 text-gray-700">
+            <th class="border px-4 py-2 text-left">Día</th>
+            <th *ngFor="let hora of horas" class="border px-2 py-2 text-left">
+              {{ hora }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let dia of matriz; let diaIndex = index"
+            class="hover:bg-gray-100"
+          >
+            <td class="border px-4 py-2 font-semibold text-gray-800">
+              {{ dia.fullDay }}
+            </td>
+            <td
+              *ngFor="let slot of dia.slots; let slotIndex = index"
+              (click)="seleccionarCelda(diaIndex, slotIndex, dia, slot)"
+              class="border px-2 py-2 text-center"
+              [ngClass]="{
+                'bg-green-500 text-white font-semibold': slot === 'Trabajando',
+                'bg-gray-100': slot !== 'Trabajando'
+              }"
+            >
+              {{ slot === "" ? "" : "" }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  

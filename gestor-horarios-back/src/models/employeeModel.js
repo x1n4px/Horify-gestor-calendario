@@ -1,30 +1,36 @@
 const mongoose = require('mongoose');
 
-const EmpleadoSchema = mongoose.Schema({
-    usuario: {
+const EmployeeSchema = mongoose.Schema({
+    user_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Usuario'
+        ref: 'User'
     },
-    tienda: {
+    store_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Tienda'
+        ref: 'Store'
     },
-    contrato: {
+    contract_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Contrato'
+        ref: 'Contract'
     },
     rol: {
         type: String
     },
-    fecha_ingreso: {
+    entry_date: {
         type: Date
+    },
+    name: {
+        type: String
+    },
+    surname: {
+        type: String
     }
 
-}, { collection: 'empleados' });
+}, { collection: 'employees' });
 
 EmpleadoSchema.method('toJSON', function () {
     const { __v, ...object } = this.toObject();
     return object;
 })
 
-module.exports = mongoose.model('Empleado', EmpleadoSchema);
+module.exports = mongoose.model('Employee', EmployeeSchema);

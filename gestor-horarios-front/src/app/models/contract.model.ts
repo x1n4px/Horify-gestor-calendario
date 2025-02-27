@@ -1,8 +1,8 @@
 // hours-worked.model.ts
 export interface Contract {
     id: number;
-    tipo_contrato: string;
-    horas_semanales: number;
-    horas_anuales: number;
+    contract_type: string;
+    weekly_hours: number;
+    anual_hours: number;
   }
   
