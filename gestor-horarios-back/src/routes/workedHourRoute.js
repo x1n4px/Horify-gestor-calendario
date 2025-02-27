@@ -4,6 +4,8 @@ const workedHourcontroller = require('../controllers/workedHourController');
 
 router.get('/hoursWorked/:id', workedHourcontroller.getWorkedHoursById);
 
-router.post('/hoursWorked', workedHourcontroller.saveWorkedHours)
+router.post('/hoursWorked', workedHourcontroller.saveWorkedHours);
+
+router.get('/hoursWorked/date/:day', workedHourcontroller.getWorkedHoursByDay);
 
 module.exports = router;

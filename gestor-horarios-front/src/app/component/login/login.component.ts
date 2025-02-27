@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { EmployeeService } from '../../service/employee.service';
 
 @Component({
   selector: 'app-login',
@@ -9,11 +10,22 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 })
 export class LoginComponent {
 
-  constructor(public router: Router) {
+  constructor(public router: Router, private employeeService: EmployeeService) {
 
   }
 
+  //TEMPORAL
+  getLoginData() {
+    this.employeeService.getEmployee(1).subscribe(
+      (data:any) => {
+        localStorage.setItem('storeId', data.employee.store_id)
+      }
+    )
+  }
+
+
   redirectTo() {
+    this.getLoginData(); // TEMPORAL
     this.router.navigate(['/home']);
   }
 }

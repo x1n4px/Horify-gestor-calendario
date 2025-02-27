@@ -13,6 +13,11 @@ export class HoursWorkedService {
     return this.http.get<WorkedHour[]>(`http://localhost:3001/api/hoursWorked/${id}`);
   }
 
+  getHoursWorkedByDate(d1: any) {
+    console.log(d1)
+    return this.http.get<WorkedHour[]>(`http://localhost:3001/api/hoursWorked/date/${d1}`);
+  }
+
   saveHoursWorked(items:WorkedHour[]) {
     return this.http.post(`http://localhost:3001/api/hoursWorked`, items);
   }

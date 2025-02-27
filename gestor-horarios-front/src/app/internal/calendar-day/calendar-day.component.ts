@@ -15,251 +15,225 @@ import { Contract } from '../../models/contract.model';
   styleUrl: './calendar-day.component.css',
 })
 export class CalendarDayComponent {
-  tiendaSeleccionada: string = '';
-    empleadoSeleccionado!: Employee;
-    meses = [
-      { label: 'Enero', value: 1 },
-      { label: 'Febrero', value: 2 },
-      { label: 'Marzo', value: 3 },
-      { label: 'Abril', value: 4 },
-      { label: 'Mayo', value: 5 },
-      { label: 'Junio', value: 6 },
-      { label: 'Julio', value: 7 },
-      { label: 'Agosto', value: 8 },
-      { label: 'Septiembre', value: 9 },
-      { label: 'Octubre', value: 10 },
-      { label: 'Noviembre', value: 11 },
-      { label: 'Diciembre', value: 12 },
-    ];
+  selectedDate: any;
+  selectedStore: string = '';
+  selectedEmployee!: Employee;
+  month = [
+    { label: 'Enero', value: 1 },
+    { label: 'Febrero', value: 2 },
+    { label: 'Marzo', value: 3 },
+    { label: 'Abril', value: 4 },
+    { label: 'Mayo', value: 5 },
+    { label: 'Junio', value: 6 },
+    { label: 'Julio', value: 7 },
+    { label: 'Agosto', value: 8 },
+    { label: 'Septiembre', value: 9 },
+    { label: 'Octubre', value: 10 },
+    { label: 'Noviembre', value: 11 },
+    { label: 'Diciembre', value: 12 },
+  ];
+
+  hours = Array.from({ length: 18 }, (_, i) => `${6 + i}:00`); // hours de 6:00 a 23:00
+
+  selectedMonth = new Date().getMonth() + 1; // Mes actual por defecto
+  matriz: { slots: string[]; employee: string}[] = [];
+
+  workedHours: WorkedHour[] = [];
+  anualHours = 0;
+
+  // Modal variables
+  modalVisible = false;
+  workedHour = {
+    creation_date: '',
+    entry_time: '',
+    departure_time: '',
+  };
+
+  contract?: Contract;
+  employees: any[] = [];
+
+  constructor(
+    public employeeService: EmployeeService,
+    public hoursWorkedService: HoursWorkedService,
+    private storeService: StoreService
+  ) {
+    //this.generarMatriz();
+  }
+  ngOnInit(): void {
+    this.getShop();
+  }
+
   
-    horas = Array.from({ length: 18 }, (_, i) => `${6 + i}:00`); // Horas de 6:00 a 23:00
+  getShop() {
+    this.storeService.getStore(1032).subscribe((data: any) => {
+      this.selectedStore = data.store.id + ' - ' + data.store.name;
+      this.employees = data.store.employee;
+    });
+  }
+
   
-    selectedMonth = new Date().getMonth() + 1; // Mes actual por defecto
-    matriz: { fullDay: string; slots: string[] }[] = [];
+
+  getEmployee(id: number) {
+    this.employeeService.getEmployee(id).subscribe((data:any) => {
+      this.selectedEmployee.name = data.employee.name;
+      this.selectedEmployee.surname = data.employee.surname;
+    });
+  }
+
+  getHoursWorked() {
+    this.hoursWorkedService.getHoursWorkedByDate(this.selectedDate).subscribe((data:any) => {
+      console.log(data)
+      this.workedHours = data;
+      this.generarMatriz();
+    });
+  }
+
+  onselectedEmployee() {
+    this.getEmployee(this.selectedEmployee.id);
+    this.getHoursWorked();
+  }
+
+  generarMatriz() {
+    this.matriz = [];
   
-    workedHours: WorkedHour[] = [];
-    anualHours = 0;
+    this.employees.forEach((empleado: Employee) => {
+      let filaEmpleado = {
+        employee: `${empleado.name} ${empleado.surname}`,
+        slots: Array(18).fill('') // De 6:00 a 24:00 (19 slots)
+      };
   
-    // Modal variables
-    modalVisible = false;
-    horaTrabajo = {
-      fecha: '',
-      hora_entrada: '',
-      hora_salida: '',
-    };
+      const horas = Array.from({ length: 18 }, (_, i) => `${6 + i}:00`);
   
-    contract?: Contract;
-    employees: any[] = [];
-    employee: any;
-  
-    constructor(
-      public employeeService: EmployeeService,
-      public hoursWorkedService: HoursWorkedService,
-      private storeService: StoreService
-    ) {
-      //this.generarMatriz();
-    }
-    ngOnInit(): void {
-      this.getShop();
-    }
-  
-    
-    getShop() {
-      this.storeService.getStore(1032).subscribe((data: any) => {
-        this.tiendaSeleccionada = data.tienda.id + ' - ' + data.tienda.nombre;
-        this.employees = data.tienda.empleados;
-      });
-    }
-  
-    
-  
-    getEmployee(id: number) {
-      this.employeeService.getEmployee(id).subscribe((data:any) => {
-        this.employee = data.empleado;
-        console.log(this.employee)
-        this.empleadoSeleccionado.name = this.employee.name;
-        this.empleadoSeleccionado.surname = this.employee.surname;
-      });
-    }
-  
-    getHoursWorked(id: number) {
-      this.hoursWorkedService.getHoursWorked(id).subscribe((data:any) => {
-        this.workedHours = data.rows;
-        this.contract = data.contrato;
-        this.workedHours.forEach((element: any) => {
-          this.anualHours += element.horas
-        });
-        this.generarMatriz();
-      });
-    }
-  
-    onEmpleadoSeleccionado() {
-      this.getEmployee(this.empleadoSeleccionado.id);
-      this.getHoursWorked(this.empleadoSeleccionado.id);
-    }
-  
-    generarMatriz() {
-      const diasEnMes = new Date(
-        new Date().getFullYear(),
-        this.selectedMonth,
-        0
-      ).getDate();
-      this.matriz = [];
-  
-      for (let dia = 1; dia <= diasEnMes; dia++) {
-        const fecha = new Date(
-          new Date().getFullYear(),
-          this.selectedMonth - 1,
-          dia
-        );
-        const diaSemana = this.obtenerDiaSemana(fecha.getDay()); // Obtiene el día de la semana
-        const fullDay = `${diaSemana} ${this.pad(dia)}/${this.pad(
-          this.selectedMonth
-        )}/${new Date().getFullYear()}`; // Formato: Sábado 04/02/2025
-  
-        const diaTrabajado = this.workedHours.filter(
-          (hora) =>
-            new Date(hora.creation_date).toISOString().split('T')[0] ===
-            `${new Date().getFullYear()}-${this.pad(
-              this.selectedMonth
-            )}-${this.pad(dia)}`
-        );
-        let slots: string[] = Array(18).fill(''); // Inicialmente todas las celdas vacías
-  
-        diaTrabajado.forEach((trabajo) => {
+      this.workedHours
+        .filter(hora => hora.employee_id === empleado.id)
+        .forEach(trabajo => {
           const entradaIndex = this.getHoraIndex(trabajo.entry_time);
-          const salidaIndex = this.getHoraIndex(trabajo.departure_time) + 1;
+          const salidaIndex = this.getHoraIndex(trabajo.departure_time);
   
-          // Marcar los slots de las horas trabajadas
-          for (let i = entradaIndex; i < salidaIndex; i++) {
-            slots[i] = 'Trabajando';
+          for (let i = entradaIndex; i <= salidaIndex; i++) {
+            filaEmpleado.slots[i] = 'Trabajando'; // Marcar en verde
           }
         });
   
-        this.matriz.push({
-          fullDay,
-          slots,
-        });
+      this.matriz.push(filaEmpleado);
+    });
+  }
+  
+  getHoraIndex(hora: string): number {
+    const [hours, minutes] = hora.split(':').map(Number);
+    return hours - 6; // Ajuste para que 6:00 sea índice 0
+  }
+  
+  
+
+  obtenerDiaSemana(dia: number): string {
+    const diasSemana = [
+      'Domingo',
+      'Lunes',
+      'Martes',
+      'Miércoles',
+      'Jueves',
+      'Viernes',
+      'Sábado',
+    ];
+    return diasSemana[dia];
+  }
+
+  pad(num: number): string {
+    return num < 10 ? `0${num}` : `${num}`;
+  }
+
+  
+
+  // Guardar las hours trabajadas
+  guardarhours() {
+    const nuevaHoraTrabajada: WorkedHour = {
+      employee_id: this.selectedEmployee.id,
+      store_id: this.selectedEmployee.store_id,
+      creation_date: this.workedHour.creation_date,
+      entry_time: this.workedHour.entry_time,
+      departure_time: this.workedHour.departure_time,
+      time: 0
+    };
+
+    // Añadir al array de hours trabajadas
+    this.workedHours.push(nuevaHoraTrabajada);
+
+    // Generar la nueva matriz con las hours actualizadas
+    this.generarMatriz();
+
+    // Cerrar el modal
+    //this.cerrarModal();
+  }
+
+  seleccionarCelda(diaIndex: number, slotIndex: number, dia: any, slot: any) {
+    const selectedHour = this.hours[slotIndex]; // Obtener la hora correspondiente
+    const creation_dateSeleccionada = this.formatearcreation_date(dia.fullDay); // Normalizar la creation_date
+
+    // Buscar si ya existe un registro con esa creation_date
+    let registroExistente = this.workedHours.find(
+      (h) => h.creation_date === creation_dateSeleccionada
+    );
+
+    if (registroExistente) {
+      // Si la hora seleccionada es anterior a la hora de entrada, actualizar entry_time
+      if (selectedHour < registroExistente.entry_time) {
+        registroExistente.entry_time = selectedHour;
       }
-    }
-  
-    obtenerDiaSemana(dia: number): string {
-      const diasSemana = [
-        'Domingo',
-        'Lunes',
-        'Martes',
-        'Miércoles',
-        'Jueves',
-        'Viernes',
-        'Sábado',
-      ];
-      return diasSemana[dia];
-    }
-  
-    pad(num: number): string {
-      return num < 10 ? `0${num}` : `${num}`;
-    }
-  
-    // Función para convertir hora en formato 'HH:MM' a índice
-    getHoraIndex(hora: string): number {
-      const horas = parseInt(hora.split(':')[0]);
-      const minutos = parseInt(hora.split(':')[1]);
-      const index = horas - 6 + (minutos === 30 ? 0.5 : 0); // De 6:00 a 23:00
-      return Math.ceil(index); // Usar Math.ceil para redondear hacia arriba
-    }
-  
-    // Guardar las horas trabajadas
-    guardarHoras() {
-      console.log(this.employee)
-      const nuevaHoraTrabajada: WorkedHour = {
-        employee_id: this.employee.id,
-        store_id: this.employee.tienda_id,
-        creation_date: this.horaTrabajo.fecha,
-        entry_time: this.horaTrabajo.hora_entrada,
-        departure_time: this.horaTrabajo.hora_salida,
+      // Si la hora seleccionada es posterior a la hora de salida, actualizar departure_time
+      if (selectedHour > registroExistente.departure_time) {
+        registroExistente.departure_time = selectedHour;
+      }
+    } else {
+      // Si no existe, crear un nuevo registro
+      this.workedHours.push({
+        employee_id: this.selectedEmployee.id,
+        store_id: this.selectedEmployee.store_id,
+        entry_time: selectedHour,
+        departure_time: selectedHour,
+        creation_date: creation_dateSeleccionada,
         time: 0
-      };
-  
-      // Añadir al array de horas trabajadas
-      this.workedHours.push(nuevaHoraTrabajada);
-  
-      // Generar la nueva matriz con las horas actualizadas
-      this.generarMatriz();
-  
-      // Cerrar el modal
-      //this.cerrarModal();
+      });
     }
+
+    // Alternar selección de la celda
+
+    this.generarMatriz();
+  }
+
+  formatearcreation_date(fullDay: string): string {
+    const month: { [key: string]: string } = {
+      Enero: '01',
+      Febrero: '02',
+      Marzo: '03',
+      Abril: '04',
+      Mayo: '05',
+      Junio: '06',
+      Julio: '07',
+      Agosto: '08',
+      Septiembre: '09',
+      Octubre: '10',
+      Noviembre: '11',
+      Diciembre: '12',
+    };
+
+    const partes = fullDay.split(' ');
+    if (partes.length !== 2) return ''; // Validación
+
+    const [dia, mes, anio] = partes[1].split('/');
+    return `${anio}-${mes}-${dia}`;
+  }
+
   
-    seleccionarCelda(diaIndex: number, slotIndex: number, dia: any, slot: any) {
-      const horaSeleccionada = this.horas[slotIndex]; // Obtener la hora correspondiente
-      const fechaSeleccionada = this.formatearFecha(dia.fullDay); // Normalizar la fecha
-  
-      // Buscar si ya existe un registro con esa fecha
-      let registroExistente = this.workedHours.find(
-        (h) => h.creation_date === fechaSeleccionada
-      );
-  
-      if (registroExistente) {
-        // Si la hora seleccionada es anterior a la hora de entrada, actualizar hora_entrada
-        if (horaSeleccionada < registroExistente.entry_time) {
-          registroExistente.entry_time = horaSeleccionada;
-        }
-        // Si la hora seleccionada es posterior a la hora de salida, actualizar hora_salida
-        if (horaSeleccionada > registroExistente.departure_time) {
-          registroExistente.departure_time = horaSeleccionada;
-        }
-      } else {
-        // Si no existe, crear un nuevo registro
-        console.log(this.employee)
-        this.workedHours.push({
-          employee_id: this.employee.id,
-          store_id: this.employee.tienda_id,
-          entry_time: horaSeleccionada,
-          departure_time: horaSeleccionada,
-          creation_date: fechaSeleccionada,
-          time: 0
-        });
+
+
+  saveChanges() {
+    this.hoursWorkedService.saveHoursWorked(this.workedHours).subscribe(
+      (data) => {
+        console.log(data);
+      }, error => {
+        console.error("Error en el guardado");
       }
-  
-      // Alternar selección de la celda
-  
-      this.generarMatriz();
-    }
-  
-    formatearFecha(fullDay: string): string {
-      const meses: { [key: string]: string } = {
-        Enero: '01',
-        Febrero: '02',
-        Marzo: '03',
-        Abril: '04',
-        Mayo: '05',
-        Junio: '06',
-        Julio: '07',
-        Agosto: '08',
-        Septiembre: '09',
-        Octubre: '10',
-        Noviembre: '11',
-        Diciembre: '12',
-      };
-  
-      const partes = fullDay.split(' ');
-      if (partes.length !== 2) return ''; // Validación
-  
-      const [dia, mes, anio] = partes[1].split('/');
-      return `${anio}-${mes}-${dia}`;
-    }
-  
-    
-  
-  
-    saveChanges() {
-      console.log(this.workedHours)
-      this.hoursWorkedService.saveHoursWorked(this.workedHours).subscribe(
-        (data) => {
-          console.log(data);
-        }, error => {
-          console.error("Error en el guardado");
-        }
-      )
-    }
+    )
+  }
 }

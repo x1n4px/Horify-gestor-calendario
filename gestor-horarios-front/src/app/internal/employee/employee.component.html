@@ -1,0 +1,52 @@
+<section class="text-gray-600 body-font">
+  <div class="container px-5 py-24 px-12 mx-auto">
+    <div class="flex flex-wrap -m-4">
+      @for (item of employees; track $index) {
+
+      <div class="lg:w-1/4 md:w-1/2 p-4 w-full px-8 hover:border rounded border-gray-600 cursor-pointer ">
+        <a class="block relative h-48 rounded overflow-hidden">
+          <img
+            alt="ecommerce"
+            class="object-contain object-center w-full h-full block"
+            src="https://www.thesprucepets.com/thmb/A5Rkkt4HDWLAtUOk4gYybcX02mM=/1080x0/filters:no_upscale():strip_icc()/30078352_448703938920062_6275637137232625664_n-5b0de8c443a1030036f9e15e.jpg"
+          />
+        </a>
+        <div class="mt-4">
+          <h3 class="text-gray-500 text-xs tracking-widest title-font mb-1">
+            {{ item.rol }}
+          </h3>
+          <h2 class="text-gray-900 title-font text-lg font-medium">
+            {{ item.name }} {{ item.surname }}
+          </h2>
+          <p class="mt-1">{{ item.entry_date | seniorLabor }}</p>
+          <p
+            class="text-orange-500 text-sm mt-2 inline-flex items-center justify-center space-x-2"
+          >
+            @if (isInProbation(item.entry_date)) {
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              width="24"
+              height="24"
+              stroke-width="2"
+            >
+              <path d="M12 9v4"></path>
+              <path
+                d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"
+              ></path>
+              <path d="M12 16h.01"></path>
+            </svg>
+            <span>Está en periodo de prueba</span>
+            }
+          </p>
+        </div>
+      </div>
+
+      }
+    </div>
+  </div>
+</section>

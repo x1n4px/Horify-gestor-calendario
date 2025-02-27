@@ -108,7 +108,25 @@ const convertToDate = (timeString) => {
 
 
  
+const getWorkedHoursByDay = async (req, res) => {
+    try {
+        const d1 = req.params.day;
 
+        console.log('Fecha recibidos: ', d1);
+
+        const [workedHours] = await pool.promise().query('select * from worked_hour ht where ht.creation_date = ?', [d1]);
+
+
+        // Retornar la tienda encontrada
+        return res.json(
+           workedHours
+        );
+
+    } catch (error) {
+        console.error('Error al guardar horas trabajadas:', error);
+        res.status(500).json({ message: 'Error interno del servidor' });
+    }
+}
 
 
 
@@ -118,5 +136,6 @@ const convertToDate = (timeString) => {
 
 module.exports = {
     getWorkedHoursById,
-    saveWorkedHours
+    saveWorkedHours,
+    getWorkedHoursByDay
 };

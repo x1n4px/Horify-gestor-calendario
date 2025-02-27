@@ -58,12 +58,13 @@ export class CalendarComponent implements OnInit {
     //this.generarMatriz();
   }
   ngOnInit(): void {
-    this.getShop();
+    const storeId = localStorage.getItem('storeId');
+    this.getShop(storeId);
   }
 
   
-  getShop() {
-    this.storeService.getStore(1032).subscribe((data: any) => {
+  getShop(storeId:any) {
+    this.storeService.getStore(storeId).subscribe((data: any) => {
       this.selectedStore = data.store.id + ' - ' + data.store.name;
       this.employees = data.store.employee;
     });
@@ -81,9 +82,9 @@ export class CalendarComponent implements OnInit {
   getHoursWorked(id: number) {
     this.hoursWorkedService.getHoursWorked(id).subscribe((data:any) => {
       this.workedHours = data.rows;
-      this.contract = data.contrato;
+      this.contract = data.contract;
       this.workedHours.forEach((element: any) => {
-        this.anualHours += element.hours
+        this.anualHours += element.time
       });
       this.generarMatriz();
     });

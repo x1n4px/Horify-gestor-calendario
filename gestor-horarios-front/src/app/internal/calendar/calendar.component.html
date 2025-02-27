@@ -55,7 +55,7 @@
       (change)="generarMatriz()"
       style="flex-grow: 1"
     >
-      <option *ngFor="let mes of meses" [value]="mes.value">
+      <option *ngFor="let mes of month" [value]="mes.value">
         {{ mes.label }}
       </option>
     </select>
@@ -89,7 +89,7 @@
       <thead>
         <tr class="bg-gray-200 text-gray-700">
           <th class="border px-4 py-2 text-left">Día</th>
-          <th *ngFor="let hora of horas" class="border px-2 py-2 text-left">
+          <th *ngFor="let hora of hours" class="border px-2 py-2 text-left">
             {{ hora }}
           </th>
         </tr>
