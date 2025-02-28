@@ -1,0 +1,81 @@
+<!-- <h2 mat-dialog-title>Información del Modal</h2>
+<mat-dialog-content>
+  <p>{{ data.message }}</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="closeDialog()">Cerrar</button>
+</mat-dialog-actions> -->
+
+<mat-dialog-content>
+<div class="fixed inset-0 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg w-96 p-6 shadow-lg">
+      <!-- Título del Modal -->
+      <h2 class="text-2xl font-semibold text-gray-900 mb-4">Agregar Nueva Vacación</h2>
+  
+      <!-- Formulario para agregar vacaciones -->
+      <form (submit)="submitVacation()">
+        <!-- Fecha de inicio -->
+        <div class="mb-4">
+          <label for="start_date" class="block text-sm font-semibold text-gray-700">Fecha de Inicio</label>
+          <input 
+            type="date" 
+            id="start_date" 
+            [(ngModel)]="vacation.start_date"
+            name="start_date"
+            class="mt-2 p-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
+          />
+        </div>
+  
+        <!-- Fecha de fin -->
+        <div class="mb-4">
+          <label for="end_date" class="block text-sm font-semibold text-gray-700">Fecha de Fin</label>
+          <input 
+            type="date" 
+            id="end_date" 
+            [(ngModel)]="vacation.end_date"
+            name="end_date"
+            class="mt-2 p-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
+          />
+        </div>
+  
+        <!-- Estado -->
+        <div class="mb-4">
+          <label for="status" class="block text-sm font-semibold text-gray-700">Estado</label>
+          <select 
+            id="status" 
+            [(ngModel)]="vacation.status"
+            name="status"
+            class="mt-2 p-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
+          >
+            <option value="pending">Pendiente</option>
+            <option value="approved">Aprobado</option>
+            <option value="rejected">Rechazado</option>
+          </select>
+        </div>
+  
+        <!-- Botones de acción -->
+        <div class="flex justify-end space-x-4">
+          <!-- Botón de Cancelar -->
+          <button 
+            type="button" 
+            class="bg-gray-400 hover:bg-gray-500 text-white py-2 px-4 rounded"
+            (click)="closeDialog()"
+          >
+            Cancelar
+          </button>
+  
+          <!-- Botón de Guardar -->
+          <button 
+            type="submit" 
+            class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
+          >
+            Guardar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</mat-dialog-content>

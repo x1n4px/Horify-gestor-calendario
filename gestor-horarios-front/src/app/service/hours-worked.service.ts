@@ -14,7 +14,6 @@ export class HoursWorkedService {
   }
 
   getHoursWorkedByDate(d1: any) {
-    console.log(d1)
     return this.http.get<WorkedHour[]>(`http://localhost:3001/api/hoursWorked/date/${d1}`);
   }
 

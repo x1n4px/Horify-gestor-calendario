@@ -5,6 +5,8 @@ const cors = require('cors');
 const storeRoute = require('./routes/storeRoute');
 const employeeRoute = require('./routes/employeeRoute');
 const workedHourRoute = require('./routes/workedHourRoute')
+const vacationRoute = require('./routes/vacationRoute')
+
 
 // Cargar las variables de entorno
 dotenv.config();
@@ -14,6 +16,7 @@ app.use(cors());
 app.use('/api', storeRoute);
 app.use('/api', employeeRoute)
 app.use('/api', workedHourRoute)
+app.use('/api', vacationRoute)
 
 // Iniciar el servidor
 const port = 3001;

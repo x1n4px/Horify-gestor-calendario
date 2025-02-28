@@ -13,6 +13,7 @@ export class EmployeeComponent implements OnInit {
   employees: Employee[] = [];
 
   constructor(private storeService: StoreService) {}
+  
   ngOnInit(): void {
     const storeId = localStorage.getItem('storeId');
     this.getShop(storeId)

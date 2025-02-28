@@ -1,0 +1,118 @@
+<header class="text-gray-600 body-font">
+  <div class="container mx-auto p-5 flex-col md:flex-row items-center">
+    <!-- Datos de la tienda -->
+    <div class="mb-4 flex items-center">
+      <label
+        for="tienda"
+        class="text-lg font-semibold text-gray-700"
+        style="flex-basis: 30%"
+        >Datos de la tienda:</label
+      >
+      <input
+        type="text"
+        id="tienda"
+        [(ngModel)]="selectedStore"
+        placeholder="Nombre de la tienda"
+        class="p-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+        style="flex-grow: 1"
+      />
+    </div>
+
+    <!-- Datos del empleado -->
+    <div class="mb-4 flex items-center">
+      <label
+        for="empleado"
+        class="text-lg font-semibold text-gray-700"
+        style="flex-basis: 30%"
+        >Datos del empleado:</label
+      >
+      <select
+        id="empleado"
+        [(ngModel)]="selectedEmployee"
+        class="p-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+        style="flex-grow: 1"
+        (ngModelChange)="onselectedEmployee()"
+      >
+        <option [ngValue]="undefined" selected>Selecciona un empleado</option>
+        <!-- Opción predeterminada -->
+        <option *ngFor="let worker of employees" [ngValue]="worker">
+          {{ worker.name }} {{ worker.surname }}
+        </option>
+      </select>
+    </div>
+
+    <div class="flex items-center space-x-6 mb-4">
+      <!-- Botón -->
+      <button
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Salvar cambios
+      </button>
+
+      <button
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      (click)="openModal()"
+    >
+      añadir vacaciones
+    </button>
+    </div>
+  </div>
+</header>
+
+<section class="text-gray-600 body-font" *ngIf="selectedEmployee">
+  <div class="container px-5 py-4 mx-auto">
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border border-gray-200">
+        <thead>
+          <tr>
+            <th
+              class="py-3 px-6 text-left text-sm font-semibold text-gray-900 border-b"
+            >
+              Fecha de Inicio
+            </th>
+            <th
+              class="py-3 px-6 text-left text-sm font-semibold text-gray-900 border-b"
+            >
+              Fecha de Fin
+            </th>
+            <th
+              class="py-3 px-6 text-left text-sm font-semibold text-gray-900 border-b"
+            >
+              Última Modificación
+            </th>
+            <th
+              class="py-3 px-6 text-left text-sm font-semibold text-gray-900 border-b"
+            >
+              Estado
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Iteramos sobre las solicitudes de vacaciones -->
+          <tr *ngFor="let vacation of vacations">
+            <td class="py-3 px-6 border-b text-sm text-gray-900">
+              {{ vacation.start_date | week }}
+            </td>
+            <td class="py-3 px-6 border-b text-sm text-gray-900">
+              {{ vacation.end_date | week }}
+            </td>
+            <td class="py-3 px-6 border-b text-sm text-gray-900">
+              {{ vacation.updated_at | date : "mediumDate" }}
+            </td>
+            <td class="py-3 px-6 border-b text-sm">
+              <select
+                [(ngModel)]="vacation.status"
+                (change)="updateVacationStatus(vacation)"
+                class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              >
+                <option value="pending">Pendiente</option>
+                <option value="approved">Aprobada</option>
+                <option value="rejected">Rechazada</option>
+              </select>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

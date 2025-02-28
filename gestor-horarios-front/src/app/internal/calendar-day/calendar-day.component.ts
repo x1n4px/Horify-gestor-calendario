@@ -224,7 +224,13 @@ export class CalendarDayComponent {
     return `${anio}-${mes}-${dia}`;
   }
 
-  
+   // Función para sumar o restar días a selectedDate
+   changeDate(days: number): void {
+    const date = new Date(this.selectedDate);
+    date.setDate(date.getDate() + days);  // Sumar o restar un día
+    this.selectedDate = date.toISOString().split('T')[0];  // Formatea la fecha
+    this.getHoursWorked();  // Llamar a la función para actualizar las horas
+  }
 
 
   saveChanges() {
